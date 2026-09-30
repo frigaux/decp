@@ -1,0 +1,29 @@
+@if (chargement()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+@if (!chargement()) {
+  <div class="ligne">
+    <mat-form-field class="example-form-field">
+      <mat-label>{{ 'components.commandes_publiques.selecteur_division.filtrer_divisions' | translate }}</mat-label>
+      <input matInput aria-label="naf" type="text" [formField]="formulaire.champRechercheDivision" (keyup)="filtrer()">
+      @if (formulaire().value()) {
+        <mat-icon aria-label="reinitialiser" (click)="reinitialiser()">clear</mat-icon>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'components.commandes_publiques.selecteur_division.procedure' | translate }}</mat-label>
+      <mat-select [formField]="formulaire.procedure" (selectionChange)="procedureSelectionnee($event)">
+        @for (procedure of procedures; track procedure) {
+          <mat-option [value]="procedure">{{ procedure }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <ul>
+    @for (division of divisions(); track division.code) {
+      <li><span [innerHTML]="division.libelle" (click)="divisionSelectionnee(division)" [ngClass]="{'selectionne' : division.selectionne}"></span></li>
+    }
+  </ul>
+}

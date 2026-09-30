@@ -1,0 +1,32 @@
+.ligne
+  display: flex
+  flex-direction: row
+  align-items: baseline
+
+  mat-form-field
+    width: calc(50% - 1rem)
+
+    input
+      width: calc(100% - 2rem)
+
+    mat-icon
+      color: var(--mat-sys-primary)
+      cursor: pointer
+
+  mat-form-field:nth-child(2)
+    margin-left: 2rem
+
+ul
+  padding: 0
+
+  li
+    list-style-type: none
+
+    span
+      cursor: pointer
+      color: var(--mat-sys-primary)
+      border-radius: 0.25rem
+      padding: 0.25rem
+
+      &:hover, &.selectionne
+        background-color: var(--mat-sys-primary-container)

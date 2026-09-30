@@ -1,0 +1,30 @@
+@if (chargement()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+@if (!chargement()) {
+  <form>
+    <mat-icon [fontIcon]="icone()" [class]="icone()"></mat-icon>
+    <mat-form-field>
+      <mat-label>{{ 'components.commandes_publiques.selecteur_commune.commune' | translate }}</mat-label>
+      <input type="text"
+             aria-label="commune"
+             matInput
+             [formField]="formulaire.champRechercheCommune"
+             [matAutocomplete]="auto"
+             (keyup)="communeModifiee()">
+      <mat-autocomplete #auto="matAutocomplete"
+                        [displayWith]="commune => commune ? commune.nom : '' "
+                        (optionSelected)="communeSelectionnee()">
+        @for (commune of communesFiltrees(); track commune) {
+          <mat-option [value]="commune">{{ commune.nom }} ({{ commune.codePostal }})</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <label>{{ 'components.commandes_publiques.selecteur_commune.rayon' | translate : { rayon: modeleFormulaire().rayon } }}</label>
+    <mat-slider min="1" max="50" step="1" discrete [displayWith]="value => `${value}km`">
+      <input matSliderThumb aria-label="rayon" [formField]="formulaire.rayon" (valueChange)="rayonModifie()">
+    </mat-slider>
+  </form>
+}

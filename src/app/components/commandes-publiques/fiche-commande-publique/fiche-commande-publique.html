@@ -1,0 +1,188 @@
+<mat-accordion>
+  @for (commandePublique of commandesPubliques(); track commandePublique.id; let isFirst = $first) {
+    <mat-expansion-panel [expanded]="isFirst">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ commandePublique.montant | currency:'EUR' }}</mat-panel-title>
+        <mat-panel-description>
+          @if (commandePublique.titulaires.length > 0 && commandePublique.titulaires[0].titulaire.etablissement) {
+            <span>
+              {{ commandePublique.titulaires[0].titulaire.etablissement.etablissement }},
+              {{ commandePublique.titulaires[0].titulaire.etablissement.codePostal }} {{ commandePublique.titulaires[0].titulaire.etablissement.commune }},
+              {{ 'components.commandes_publiques.fiche_commande_publique.mois' | translate : { nbMois: commandePublique.dureeMois } }}
+            </span>
+          }
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="ligne">
+        <label>{{ 'components.commandes_publiques.fiche_commande_publique.objet' | translate }}</label>
+        <span>{{ commandePublique.objet }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.commandes_publiques.fiche_commande_publique.code_cpv' | translate }}</label>
+        <span>{{ commandePublique.codeCPV }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.commandes_publiques.fiche_commande_publique.code_postal' | translate }}</label>
+        <span>{{ commandePublique.lieuExecution.code }} {{ commandePublique.lieuExecution.commune }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.commandes_publiques.fiche_commande_publique.procedure' | translate }}</label>
+        <span>{{ commandePublique.procedure }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.commandes_publiques.fiche_commande_publique.duree_mois' | translate }}</label>
+        <span>{{ 'components.commandes_publiques.fiche_commande_publique.mois' | translate : { nbMois: commandePublique.dureeMois } }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.commandes_publiques.fiche_commande_publique.date_notification' | translate }}</label>
+        <span>{{ commandePublique.dateNotification | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.commandes_publiques.fiche_commande_publique.montant' | translate }}</label>
+        <span>{{ commandePublique.montant | currency:'EUR' }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.commandes_publiques.fiche_commande_publique.offres_recues' | translate }}</label>
+        <span>{{ commandePublique.offresRecues }}</span>
+      </div>
+      @for (titulaire of commandePublique.titulaires; track titulaire.titulaire.id) {
+        @if (titulaire.titulaire.etablissement) {
+          <div class="titulaire">
+            <div class="ligne">
+              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.titulaire' | translate }}</label>
+              <span>{{ titulaire.titulaire.etablissement.etablissement }}</span>
+            </div>
+            <div class="ligne">
+              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.code_postal' | translate }}</label>
+              <span>{{ titulaire.titulaire.etablissement.codePostal }} {{ titulaire.titulaire.etablissement.commune }}</span>
+            </div>
+            <div class="ligne">
+              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.siret' | translate }}</label>
+              <span>{{ titulaire.titulaire.etablissement.siret }}</span>
+            </div>
+            <div class="ligne">
+              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.code_naf' | translate }}</label>
+              <span>{{ titulaire.titulaire.etablissement.naf }}</span>
+            </div>
+            <div class="ligne">
+              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.date_creation' | translate }}</label>
+              <span>{{ titulaire.titulaire.etablissement.dateCreation | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="ligne">
+              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.etablissement_siege' | translate }}</label>
+              <span>{{ titulaire.titulaire.etablissement.etablissementSiege === 'true' ? ('commun.oui' | translate) : ('commun.non' | translate) }}</span>
+            </div>
+            <div class="ligne">
+              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.effectif' | translate }}</label>
+              <span>{{ titulaire.titulaire.etablissement.effectif }}</span>
+            </div>
+            <div class="ligne">
+              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.liens' | translate }}</label>
+              <span>
+                <a href="{{ `https://www.pagesjaunes.fr/siret/${titulaire.titulaire.etablissement.siret}` }}"
+                   target="_blank">
+                  {{ 'components.commandes_publiques.fiche_commande_publique.titulaire.pages_jaunes' | translate }}
+                </a>
+                <a
+                  href="{{ `https://annuaire-entreprises.data.gouv.fr/etablissement/${titulaire.titulaire.etablissement.siret}` }}"
+                  target="_blank">
+                  {{ 'components.commandes_publiques.fiche_commande_publique.titulaire.annuaire' | translate }}
+                </a>
+                <a
+                  href="{{ `https://www.societe.com/societe/${titulaire.titulaire.etablissement.etablissement.replaceAll(' ','').toLowerCase()}-${titulaire.titulaire.etablissement.siret.substring(0, 9)}` }}.html"
+                  target="_blank">
+                  {{ 'components.commandes_publiques.fiche_commande_publique.titulaire.société' | translate }}
+                </a>
+              </span>
+            </div>
+          </div>
+        }
+      }
+    </mat-expansion-panel>
+  }
+</mat-accordion>
+
+<!--@if (commandesPubliques(); as commandePublique) {-->
+<!--  <mat-card appearance="outlined">-->
+<!--    <mat-card-header>-->
+<!--      <mat-card-title>{{ commandePublique.objet }}</mat-card-title>-->
+<!--      <mat-card-subtitle>{{ commandePublique.lieuExecution.code }} {{ commandePublique.lieuExecution.commune }}</mat-card-subtitle>-->
+<!--    </mat-card-header>-->
+<!--    <mat-card-content>-->
+<!--      <div class="ligne">-->
+<!--        <label>{{ 'components.commandes_publiques.fiche_commande_publique.code_cpv' | translate }}</label>-->
+<!--        <span>{{ commandePublique.codeCPV }}</span>-->
+<!--      </div>-->
+<!--      <div class="ligne">-->
+<!--        <label>{{ 'components.commandes_publiques.fiche_commande_publique.procedure' | translate }}</label>-->
+<!--        <span>{{ commandePublique.procedure }}</span>-->
+<!--      </div>-->
+<!--      <div class="ligne">-->
+<!--        <label>{{ 'components.commandes_publiques.fiche_commande_publique.duree_mois' | translate }}</label>-->
+<!--        <span>{{ 'components.commandes_publiques.fiche_commande_publique.mois' | translate : { nbMois: commandePublique.dureeMois } }}</span>-->
+<!--      </div>-->
+<!--      <div class="ligne">-->
+<!--        <label>{{ 'components.commandes_publiques.fiche_commande_publique.date_notification' | translate }}</label>-->
+<!--        <span>{{ commandePublique.dateNotification | date: 'dd/MM/yyyy' }}</span>-->
+<!--      </div>-->
+<!--      <div class="ligne">-->
+<!--        <label>{{ 'components.commandes_publiques.fiche_commande_publique.montant' | translate }}</label>-->
+<!--        <span>{{ commandePublique.montant | currency:'EUR' }}</span>-->
+<!--      </div>-->
+<!--      <div class="ligne">-->
+<!--        <label>{{ 'components.commandes_publiques.fiche_commande_publique.offres_recues' | translate }}</label>-->
+<!--        <span>{{ commandePublique.offresRecues }}</span>-->
+<!--      </div>-->
+<!--      @for (titulaire of commandePublique.titulaires; track titulaire.titulaire.id) {-->
+<!--        @if (titulaire.titulaire.etablissement) {-->
+<!--          <div class="titulaire">-->
+<!--            <div class="ligne">-->
+<!--              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.titulaire' | translate }}</label>-->
+<!--              <span>{{ titulaire.titulaire.etablissement.etablissement }} ({{ titulaire.titulaire.etablissement.naf }}-->
+<!--                )</span>-->
+<!--            </div>-->
+<!--            <div class="ligne">-->
+<!--              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.code_postal' | translate }}</label>-->
+<!--              <span>{{ titulaire.titulaire.etablissement.codePostal }} {{ titulaire.titulaire.etablissement.commune }}</span>-->
+<!--            </div>-->
+<!--            <div class="ligne">-->
+<!--              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.siret' | translate }}</label>-->
+<!--              <span>{{ titulaire.titulaire.etablissement.siret }}</span>-->
+<!--            </div>-->
+<!--            <div class="ligne">-->
+<!--              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.date_creation' | translate }}</label>-->
+<!--              <span>{{ titulaire.titulaire.etablissement.dateCreation | date: 'dd/MM/yyyy' }}</span>-->
+<!--            </div>-->
+<!--            <div class="ligne">-->
+<!--              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.etablissement_siege' | translate }}</label>-->
+<!--              <span>{{ titulaire.titulaire.etablissement.etablissementSiege === 'true' ? ('commun.oui' | translate) : ('commun.non' | translate) }}</span>-->
+<!--            </div>-->
+<!--            <div class="ligne">-->
+<!--              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.effectif' | translate }}</label>-->
+<!--              <span>{{ titulaire.titulaire.etablissement.effectif }}</span>-->
+<!--            </div>-->
+<!--            <div class="ligne">-->
+<!--              <label>{{ 'components.commandes_publiques.fiche_commande_publique.titulaire.liens' | translate }}</label>-->
+<!--              <span>-->
+<!--                <a href="{{ `https://www.pagesjaunes.fr/siret/${titulaire.titulaire.etablissement.siret}` }}"-->
+<!--                   target="_blank">-->
+<!--                  {{ 'components.commandes_publiques.fiche_commande_publique.titulaire.pages_jaunes' | translate }}-->
+<!--                </a>-->
+<!--                <a-->
+<!--                  href="{{ `https://annuaire-entreprises.data.gouv.fr/etablissement/${titulaire.titulaire.etablissement.siret}` }}"-->
+<!--                  target="_blank">-->
+<!--                  {{ 'components.commandes_publiques.fiche_commande_publique.titulaire.annuaire' | translate }}-->
+<!--                </a>-->
+<!--                <a-->
+<!--                  href="{{ `https://www.societe.com/societe/${titulaire.titulaire.etablissement.etablissement.replaceAll(' ','').toLowerCase()}-${titulaire.titulaire.etablissement.siret.substring(0, 9)}` }}.html"-->
+<!--                  target="_blank">-->
+<!--                  {{ 'components.commandes_publiques.fiche_commande_publique.titulaire.société' | translate }}-->
+<!--                </a>-->
+<!--              </span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        }-->
+<!--      }-->
+<!--    </mat-card-content>-->
+<!--  </mat-card>-->
+<!--}-->

@@ -1,0 +1,20 @@
+div
+  display: flex
+  flex-direction: row
+  align-items: center
+  flex-wrap: wrap
+
+  & > div
+    margin-left: 1rem
+
+  span
+    background-color: var(--mat-sys-primary-container)
+    border-radius: 0.5rem
+    padding: 0.1rem 0.25rem 0.1rem 0.25rem
+    cursor: pointer
+
+    &:hover, &.selectionne
+      background-color: var(--mat-sys-primary)
+
+    &:not(:first-child)
+      margin-left: 0.25rem

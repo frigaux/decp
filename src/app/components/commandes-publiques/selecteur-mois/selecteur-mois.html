@@ -1,0 +1,8 @@
+<div>
+  <mat-icon [fontIcon]="icone()" [class]="icone()"></mat-icon>
+  <div>
+    @for (mois of listeMois(); track mois) {
+      <span (click)="gererClic(mois)" [ngClass]="{'selectionne' : mois.selectionne}">{{ mois.date | date:'MMMM y' }}</span>
+    }
+  </div>
+</div>

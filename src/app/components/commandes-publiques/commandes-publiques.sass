@@ -1,0 +1,40 @@
+div.colonne
+  display: flex
+  flex-direction: column
+
+  app-selecteur-commune, app-selecteur-mois, app-selecteur-division
+    margin-top: 1rem
+
+div.conteneur
+  display: flex
+
+  div.ligne
+    display: flex
+
+    app-carte-commande-publique, app-fiche-commande-publique
+      margin-top: 1rem
+
+@media (orientation: landscape)
+  div.conteneur
+    div.ligne
+      flex-direction: row
+
+      app-carte-commande-publique, app-fiche-commande-publique
+        width: calc(50vw - 2rem - 24px)
+
+      app-carte-commande-publique
+        height: calc(100vh - 125px - 4rem)
+
+      app-fiche-commande-publique
+        margin-left: 1rem
+
+@media (orientation: portrait)
+  div.conteneur
+    div.ligne
+      flex-direction: column
+
+      app-carte-commande-publique, app-fiche-commande-publique
+        width: calc(100vw - 2rem - 48px)
+
+      app-carte-commande-publique
+        height: 50vh

@@ -1,0 +1,49 @@
+{
+  "commun": {
+    "oui": "oui",
+    "non": "non",
+    "erreur_http": "Impossible d'accéder à la ressource : {{message}}"
+  },
+  "components": {
+    "commandes_publiques": {
+      "selecteurs": "Choix de la commune, période et division CPV",
+      "resultat": "Liste des commandes publiques",
+      "selecteur_commune": {
+        "commune": "Commune",
+        "rayon": "dans un rayon de {{rayon}}km"
+      },
+      "selecteur_division": {
+        "filtrer_divisions": "Filtrer les divisions CPV",
+        "procedure": "Procédure DECP"
+      },
+      "carte_commandes_publiques": {
+        "trop_de_resultats": "La recherche a retourné un trop grand nombre de commandes publiques : {{nbCommandesPubliques}}. Seules les 1000 premières commandes publiques sont affichées. Essayez de réduire le rayon couvert autour de la commune ou la période couverte pour réduire le résultat de la recherche.",
+        "plusieurs_commandes_publiques": "{{nbCommandesPubliques}} commandes publiques"
+      },
+      "fiche_commande_publique": {
+        "objet": "Objet",
+        "code_cpv": "Code CPV",
+        "code_postal": "Code postal",
+        "procedure": "Procédure",
+        "duree_mois": "Durée",
+        "mois": "{{nbMois}} mois",
+        "date_notification": "Date notification",
+        "montant": "Montant",
+        "offres_recues": "Nb offres reçues",
+        "titulaire": {
+          "titulaire": "Titulaire",
+          "code_postal": "Code postal",
+          "siret": "SIRET",
+          "code_naf": "Code NAF",
+          "date_creation": "Date de création",
+          "etablissement_siege": "Etablissement siège",
+          "effectif": "Effectif",
+          "liens": "Liens",
+          "pages_jaunes": "pages jaunes",
+          "annuaire": "annuaire des entreprises",
+          "société": "société"
+        }
+      }
+    }
+  }
+}

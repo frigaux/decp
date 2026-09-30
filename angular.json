@@ -45,7 +45,8 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "http://fabien.rigaux.free.fr/informatique/angular/decp/"
             },
             "development": {
               "optimization": false,

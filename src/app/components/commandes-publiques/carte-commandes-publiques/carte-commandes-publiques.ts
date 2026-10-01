@@ -13,29 +13,30 @@ import { TranslateService } from '@ngx-translate/core';
 import { LimitesGPS } from '../../../services/limites-gps.interface';
 import * as L from 'leaflet';
 import { Commune } from '../../../services/commune.interface';
-import { CommandePublique } from '../../../services/commande-publique';
+import { CommandePublique } from '../../../services/commande-publique.interface';
 import { Division } from '../../../services/division.interface';
 import { Periode } from '../selecteur-mois/periode.class';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { DecimalPipe } from '@angular/common';
-import { Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Message } from '../../../services/message';
 
 @Component({
   imports: [MatProgressBar],
   providers: [DecimalPipe],
-  selector: 'app-carte-commande-publique',
-  styleUrl: './carte-commande-publique.sass',
-  templateUrl: './carte-commande-publique.html',
+  selector: 'app-carte-commandes-publiques',
+  styleUrl: './carte-commandes-publiques.sass',
+  templateUrl: './carte-commandes-publiques.html',
 })
-export class CarteCommandePublique implements AfterViewInit {
+export class CarteCommandesPubliques implements AfterViewInit {
   outputCommandePubliqueSelectionnee = output<Array<CommandePublique>>({
     alias: 'commandesPubliquesSelectionnees',
   });
 
   private referentiel = inject(Referentiel);
-  private translate = inject(TranslateService);
+  private translateService = inject(TranslateService);
   private decimalPipe = inject(DecimalPipe);
+  private message = inject(Message);
 
   private limitesGPS?: LimitesGPS;
 
@@ -123,6 +124,9 @@ export class CarteCommandePublique implements AfterViewInit {
         .commandesPubliques(this.limitesGPS!, division, procedure, periode)
         .subscribe({
           next: (commandesPubliques) => {
+            if (commandesPubliques.length === 0) {
+              this.message.afficher(this.translateService.instant('commun.aucun_resultat'));
+            }
             commandesPubliques = this.limiterNbResultats(commandesPubliques);
             const commandesPubliquesParGps =
               this.grouperCommandesParCoordonnees(commandesPubliques);
@@ -130,7 +134,9 @@ export class CarteCommandePublique implements AfterViewInit {
             this.chargement.set(false);
           },
           error: (erreur: HttpErrorResponse) => {
-            alert(this.translate.instant('commun.erreur_http', { message: erreur.message }));
+            this.message.afficher(
+              this.translateService.instant('commun.erreur_http', { message: erreur.message }),
+            );
           },
         });
     }
@@ -152,8 +158,8 @@ export class CarteCommandePublique implements AfterViewInit {
 
   private limiterNbResultats(commandesPubliques: Array<CommandePublique>) {
     if (commandesPubliques.length > 1000) {
-      alert(
-        this.translate.instant(
+      this.message.afficher(
+        this.translateService.instant(
           'components.commandes_publiques.carte_commandes_publiques.trop_de_resultats',
           {
             nbCommandesPubliques: commandesPubliques.length,
@@ -180,7 +186,7 @@ export class CarteCommandePublique implements AfterViewInit {
           commandesPubliques[0].lieuExecution.longitude,
         ],
         {
-          icon: CarteCommandePublique.iconeMarqueur,
+          icon: CarteCommandesPubliques.iconeMarqueur,
         },
       )
         .addTo(this.carte)
@@ -198,7 +204,7 @@ export class CarteCommandePublique implements AfterViewInit {
 
   private tooltip(commandesPubliques: Array<CommandePublique>) {
     if (commandesPubliques.length > 1) {
-      return this.translate.instant(
+      return this.translateService.instant(
         'components.commandes_publiques.carte_commandes_publiques.plusieurs_commandes_publiques',
         {
           nbCommandesPubliques: commandesPubliques.length,

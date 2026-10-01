@@ -6,7 +6,7 @@ import { Commune } from './commune.interface';
 import { Division } from './division.interface';
 import { LimitesGPS } from './limites-gps.interface';
 import { Periode } from '../components/commandes-publiques/selecteur-mois/periode.class';
-import { CommandePublique } from './commande-publique';
+import { CommandePublique } from './commande-publique.interface';
 import { SelecteurDivision } from '../components/commandes-publiques/selecteur-division/selecteur-division';
 
 @Service()

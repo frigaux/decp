@@ -2,12 +2,15 @@
   "commun": {
     "oui": "oui",
     "non": "non",
-    "erreur_http": "Impossible d'accéder à la ressource : {{message}}"
+    "erreur_http": "Impossible d'accéder à la ressource : {{message}}",
+    "aucun_resultat": "Aucun résultat",
+    "fermer": "Fermer"
   },
   "components": {
     "commandes_publiques": {
       "selecteurs": "Choix de la commune, période et division CPV",
       "resultat": "Liste des commandes publiques",
+      "formulaire_invalide": "Vous devez sélectionner une commune, une période et une division !",
       "selecteur_commune": {
         "commune": "Commune",
         "rayon": "dans un rayon de {{rayon}}km"

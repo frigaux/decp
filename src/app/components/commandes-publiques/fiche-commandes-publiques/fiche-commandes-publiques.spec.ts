@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FicheCommandePublique } from './fiche-commande-publique';
+import { FicheCommandesPubliques } from './fiche-commandes-publiques';
 
-describe('FicheCommandePublique', () => {
-  let component: FicheCommandePublique;
-  let fixture: ComponentFixture<FicheCommandePublique>;
+describe('FicheCommandesPubliques', () => {
+  let component: FicheCommandesPubliques;
+  let fixture: ComponentFixture<FicheCommandesPubliques>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FicheCommandePublique],
+      imports: [FicheCommandesPubliques],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FicheCommandePublique);
+    fixture = TestBed.createComponent(FicheCommandesPubliques);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

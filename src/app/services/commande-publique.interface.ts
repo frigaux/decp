@@ -1,4 +1,4 @@
-import { Titulaire } from './titulaire';
+import { Titulaire } from './titulaire.interface';
 
 export interface CommandePublique {
   id: string;

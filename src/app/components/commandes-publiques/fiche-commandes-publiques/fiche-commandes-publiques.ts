@@ -1,5 +1,5 @@
 import { Component, signal, WritableSignal } from '@angular/core';
-import { CommandePublique } from '../../../services/commande-publique';
+import { CommandePublique } from '../../../services/commande-publique.interface';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
@@ -21,11 +21,11 @@ import {
     MatExpansionPanelTitle,
     MatExpansionPanelDescription,
   ],
-  selector: 'app-fiche-commande-publique',
-  styleUrl: './fiche-commande-publique.sass',
-  templateUrl: './fiche-commande-publique.html',
+  selector: 'app-fiche-commandes-publiques',
+  styleUrl: './fiche-commandes-publiques.sass',
+  templateUrl: './fiche-commandes-publiques.html',
 })
-export class FicheCommandePublique {
+export class FicheCommandesPubliques {
   protected commandesPubliques: WritableSignal<Array<CommandePublique> | undefined> =
     signal(undefined);
 

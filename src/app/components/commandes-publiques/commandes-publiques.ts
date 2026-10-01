@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, viewChild, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, signal, viewChild, WritableSignal } from '@angular/core';
 import {
   MatAccordion,
   MatExpansionPanel,
@@ -6,17 +6,18 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle,
 } from '@angular/material/expansion';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SelecteurCommune } from './selecteur-commune/selecteur-commune';
 import { Commune } from '../../services/commune.interface';
 import { SelecteurMois } from './selecteur-mois/selecteur-mois';
 import { Periode } from './selecteur-mois/periode.class';
 import { SelecteurDivision } from './selecteur-division/selecteur-division';
 import { Division } from '../../services/division.interface';
-import { CarteCommandePublique } from './carte-commande-publique/carte-commande-publique';
-import { CommandePublique } from '../../services/commande-publique';
-import { FicheCommandePublique } from './fiche-commande-publique/fiche-commande-publique';
+import { CarteCommandesPubliques } from './carte-commandes-publiques/carte-commandes-publiques';
+import { CommandePublique } from '../../services/commande-publique.interface';
+import { FicheCommandesPubliques } from './fiche-commandes-publiques/fiche-commandes-publiques';
 import { DatePipe } from '@angular/common';
+import { Message } from '../../services/message';
 
 @Component({
   imports: [
@@ -29,8 +30,8 @@ import { DatePipe } from '@angular/common';
     SelecteurMois,
     SelecteurDivision,
     MatExpansionPanelDescription,
-    CarteCommandePublique,
-    FicheCommandePublique,
+    CarteCommandesPubliques,
+    FicheCommandesPubliques,
     DatePipe,
   ],
   selector: 'app-commandes-publiques',
@@ -38,13 +39,16 @@ import { DatePipe } from '@angular/common';
   templateUrl: './commandes-publiques.html',
 })
 export class CommandesPubliques implements OnInit {
+  private translateService = inject(TranslateService);
+  private message = inject(Message);
+
   private panneauSelecteurs = viewChild.required<MatExpansionPanel>('panneauSelecteurs');
   private panneauCarte = viewChild.required<MatExpansionPanel>('panneauCarte');
 
   private carteCommandesPubliques =
-    viewChild.required<CarteCommandePublique>('carteCommandesPubliques');
+    viewChild.required<CarteCommandesPubliques>('carteCommandesPubliques');
   private ficheCommandePublique =
-    viewChild.required<FicheCommandePublique>('ficheCommandePublique');
+    viewChild.required<FicheCommandesPubliques>('ficheCommandesPubliques');
 
   private communeSelectionnee?: Commune;
   private rayonSelectionne?: number;
@@ -87,6 +91,10 @@ export class CommandesPubliques implements OnInit {
         this.periodeSelectionnee()!,
       );
       this.ficheCommandePublique().reinitialiser();
+    } else {
+      this.message.afficher(
+        this.translateService.instant('components.commandes_publiques.formulaire_invalide'),
+      );
     }
   }
 

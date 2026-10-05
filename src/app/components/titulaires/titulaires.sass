@@ -1,0 +1,40 @@
+div.colonne
+  display: flex
+  flex-direction: column
+
+  app-selecteur-commune, app-selecteur-mois, app-selecteur-division
+    margin-top: 1rem
+
+div.conteneur
+  display: flex
+
+  div.ligne
+    display: flex
+
+    app-carte-titulaires, app-fiche-titulaire
+      margin-top: 1rem
+
+@media (orientation: landscape)
+  div.conteneur
+    div.ligne
+      flex-direction: row
+
+      app-carte-titulaires, app-fiche-titulaire
+        width: calc(50vw - 2rem - 24px)
+
+      app-carte-titulaires
+        height: calc(100vh - 125px - 4rem)
+
+      app-fiche-titulaire
+        margin-left: 1rem
+
+@media (orientation: portrait)
+  div.conteneur
+    div.ligne
+      flex-direction: column
+
+      app-carte-titulaires, app-fiche-titulaire
+        width: calc(100vw - 2rem - 48px)
+
+      app-carte-titulaires
+        height: 50vh

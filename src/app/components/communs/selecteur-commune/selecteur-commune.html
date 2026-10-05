@@ -6,7 +6,7 @@
   <form>
     <mat-icon [fontIcon]="icone()" [class]="icone()"></mat-icon>
     <mat-form-field>
-      <mat-label>{{ 'components.commandes_publiques.selecteur_commune.commune' | translate }}</mat-label>
+      <mat-label>{{ 'components.communs.selecteur_commune.commune' | translate }}</mat-label>
       <input type="text"
              aria-label="commune"
              matInput
@@ -22,7 +22,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <label>{{ 'components.commandes_publiques.selecteur_commune.rayon' | translate : { rayon: modeleFormulaire().rayon } }}</label>
+    <label>{{ 'components.communs.selecteur_commune.rayon' | translate : { rayon: modeleFormulaire().rayon } }}</label>
     <mat-slider min="1" max="50" step="1" discrete [displayWith]="value => `${value}km`">
       <input matSliderThumb aria-label="rayon" [formField]="formulaire.rayon" (valueChange)="rayonModifie()">
     </mat-slider>

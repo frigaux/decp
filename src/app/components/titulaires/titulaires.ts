@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal, viewChild, WritableSignal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import {
   MatAccordion,
   MatExpansionPanel,
@@ -6,49 +7,46 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle,
 } from '@angular/material/expansion';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SelecteurCommune } from '../communs/selecteur-commune/selecteur-commune';
-import { Commune } from '../../services/commune.interface';
-import { SelecteurMois } from '../communs/selecteur-mois/selecteur-mois';
-import { Periode } from '../communs/selecteur-mois/periode.class';
 import { SelecteurDivision } from '../communs/selecteur-division/selecteur-division';
-import { Division } from '../../services/division.interface';
-import { CarteCommandesPubliques } from './carte-commandes-publiques/carte-commandes-publiques';
-import { CommandePublique } from '../../services/commande-publique.interface';
-import { FicheCommandesPubliques } from './fiche-commandes-publiques/fiche-commandes-publiques';
-import { DatePipe } from '@angular/common';
+import { SelecteurMois } from '../communs/selecteur-mois/selecteur-mois';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Message } from '../../services/message';
+import { Commune } from '../../services/commune.interface';
+import { Division } from '../../services/division.interface';
+import { Periode } from '../communs/selecteur-mois/periode.class';
+import { CarteTitulaires } from './carte-titulaires/carte-titulaires';
+import { Titulaire } from '../../services/titulaire.interface';
+import { FicheTitulaire } from './fiche-titulaire/fiche-titulaire';
 
 @Component({
   imports: [
+    DatePipe,
     MatAccordion,
     MatExpansionPanel,
+    MatExpansionPanelDescription,
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
-    TranslatePipe,
     SelecteurCommune,
-    SelecteurMois,
     SelecteurDivision,
-    MatExpansionPanelDescription,
-    CarteCommandesPubliques,
-    FicheCommandesPubliques,
-    DatePipe,
+    SelecteurMois,
+    TranslatePipe,
+    CarteTitulaires,
+    FicheTitulaire,
   ],
-  selector: 'app-commandes-publiques',
-  styleUrl: './commandes-publiques.sass',
-  templateUrl: './commandes-publiques.html',
+  selector: 'app-titulaires',
+  styleUrl: './titulaires.sass',
+  templateUrl: './titulaires.html',
 })
-export class CommandesPubliques implements OnInit {
+export class Titulaires implements OnInit {
   private translateService = inject(TranslateService);
   private message = inject(Message);
 
   private panneauSelecteurs = viewChild.required<MatExpansionPanel>('panneauSelecteurs');
   private panneauCarte = viewChild.required<MatExpansionPanel>('panneauCarte');
 
-  private carteCommandesPubliques =
-    viewChild.required<CarteCommandesPubliques>('carteCommandesPubliques');
-  private ficheCommandePublique =
-    viewChild.required<FicheCommandesPubliques>('ficheCommandesPubliques');
+  private carteTitulaires = viewChild.required<CarteTitulaires>('carteTitulaires');
+  private ficheTitulaire = viewChild.required<FicheTitulaire>('ficheTitulaire');
 
   private communeSelectionnee?: Commune;
   private rayonSelectionne?: number;
@@ -84,13 +82,13 @@ export class CommandesPubliques implements OnInit {
       this.divisionSelectionnee() &&
       this.procedureSelectionnee()
     ) {
-      this.carteCommandesPubliques().positionner(this.communeSelectionnee, this.rayonSelectionne);
-      this.carteCommandesPubliques().placerMarqueursEntreprises(
+      this.carteTitulaires().positionner(this.communeSelectionnee, this.rayonSelectionne);
+      this.carteTitulaires().placerMarqueursTitulaires(
         this.divisionSelectionnee()!,
         this.procedureSelectionnee()!,
         this.periodeSelectionnee()!,
       );
-      this.ficheCommandePublique().reinitialiser();
+      // this.ficheCommandePublique().reinitialiser();
     } else {
       this.message.afficher(
         this.translateService.instant('components.commandes_publiques.formulaire_invalide'),
@@ -121,7 +119,7 @@ export class CommandesPubliques implements OnInit {
     this.afficherPanneauCarte();
   }
 
-  protected afficherCommandesPubliques(commandesPubliques: Array<CommandePublique>) {
-    this.ficheCommandePublique().afficher(commandesPubliques);
+  protected afficherTitulaire(titulaire: Titulaire) {
+    this.ficheTitulaire().afficher(titulaire);
   }
 }

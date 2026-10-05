@@ -7,10 +7,7 @@
     "fermer": "Fermer"
   },
   "components": {
-    "commandes_publiques": {
-      "selecteurs": "Choix de la commune, période et division CPV",
-      "resultat": "Liste des commandes publiques",
-      "formulaire_invalide": "Vous devez sélectionner une commune, une période et une division !",
+    "communs": {
       "selecteur_commune": {
         "commune": "Commune",
         "rayon": "dans un rayon de {{rayon}}km"
@@ -18,12 +15,17 @@
       "selecteur_division": {
         "filtrer_divisions": "Filtrer les divisions CPV",
         "procedure": "Procédure DECP"
-      },
+      }
+    },
+    "commandes_publiques": {
+      "selecteurs": "Choix de la commune, période et division CPV",
+      "resultat": "Liste des commandes publiques",
+      "formulaire_invalide": "Vous devez sélectionner une commune, une période et une division !",
       "carte_commandes_publiques": {
         "trop_de_resultats": "La recherche a retourné un trop grand nombre de commandes publiques : {{nbCommandesPubliques}}. Seules les 1000 premières commandes publiques sont affichées. Essayez de réduire le rayon couvert autour de la commune ou la période couverte pour réduire le résultat de la recherche.",
         "plusieurs_commandes_publiques": "{{nbCommandesPubliques}} commandes publiques"
       },
-      "fiche_commande_publique": {
+      "fiche_commandes_publiques": {
         "objet": "Objet",
         "code_cpv": "Code CPV",
         "code_postal": "Code postal",
@@ -45,6 +47,38 @@
           "pages_jaunes": "pages jaunes",
           "annuaire": "annuaire des entreprises",
           "société": "société"
+        }
+      }
+    },
+    "titulaires": {
+      "selecteurs": "Choix de la commune, période et division CPV",
+      "resultat": "Liste des titulaires",
+      "formulaire_invalide": "Vous devez sélectionner une commune, une période et une division !",
+      "carte_titulaires": {
+        "trop_de_resultats": "La recherche a retourné un trop grand nombre de titulaires : {{nbTitulaires}}. Seuls les 1000 premiers titulaires sont affichés. Essayez de réduire le rayon couvert autour de la commune ou la période couverte pour réduire le résultat de la recherche."
+      },
+      "fiche_titulaire": {
+        "titulaire": "Titulaire",
+        "code_postal": "Code postal",
+        "siret": "SIRET",
+        "code_naf": "Code NAF",
+        "date_creation": "Date de création",
+        "etablissement_siege": "Etablissement siège",
+        "effectif": "Effectif",
+        "liens": "Liens",
+        "pages_jaunes": "pages jaunes",
+        "annuaire": "annuaire des entreprises",
+        "société": "société",
+        "commandes_publiques": {
+          "commande_publique": "Commande publique",
+          "code_cpv": "Code CPV",
+          "code_postal": "Code postal",
+          "procedure": "Procédure",
+          "duree_mois": "Durée",
+          "mois": "{{nbMois}} mois",
+          "date_notification": "Date notification",
+          "montant": "Montant",
+          "offres_recues": "Nb offres reçues"
         }
       }
     }

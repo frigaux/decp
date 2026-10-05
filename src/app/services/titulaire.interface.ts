@@ -1,3 +1,5 @@
+import { CommandePublique } from './commande-publique.interface';
+
 export interface Titulaire {
   id: number;
   typeIdentifiant: string;
@@ -12,8 +14,9 @@ export interface Titulaire {
     voie: string;
     codePostal: string;
     commune: string;
-    longitude: number;
-    latitude: number;
+    longitude?: number;
+    latitude?: number;
     effectif?: string;
   };
+  commandesPubliques?: Array<CommandePublique>;
 }

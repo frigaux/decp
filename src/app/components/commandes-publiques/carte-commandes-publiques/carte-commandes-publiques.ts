@@ -12,14 +12,15 @@ import { Referentiel } from '../../../services/referentiel';
 import { TranslateService } from '@ngx-translate/core';
 import { LimitesGPS } from '../../../services/limites-gps.interface';
 import * as L from 'leaflet';
-import { Commune } from '../../../services/commune.interface';
 import { CommandePublique } from '../../../services/commande-publique.interface';
 import { Division } from '../../../services/division.interface';
-import { Periode } from '../selecteur-mois/periode.class';
+import { Periode } from '../../communs/selecteur-mois/periode.class';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Message } from '../../../services/message';
+import { initialiserCarte, positionnerCarte } from '../../communs/Carte';
+import { Commune } from '../../../services/commune.interface';
 
 @Component({
   imports: [MatProgressBar],
@@ -54,66 +55,11 @@ export class CarteCommandesPubliques implements AfterViewInit {
   protected chargement: WritableSignal<boolean> = signal(false);
 
   ngAfterViewInit(): void {
-    this.initialiserCarte();
-  }
-
-  private initialiserCarte(): void {
-    // 1. Définir les frontières géographiques de la France métropolitaine (Sud-Ouest et Nord-Est)
-    const france = L.latLngBounds(
-      L.latLng(41.3, -5.5), // Coin Sud-Ouest (proche de la frontière espagnole / océan)
-      L.latLng(51.1, 10.0), // Coin Nord-Est (proche des frontières allemandes / belges)
-    );
-
-    // 2. Initialiser la carte avec les restrictions
-    this.carte = L.map(this.conteneurCarte.nativeElement, {
-      center: [46.2276, 2.2137], // Centré sur la France
-      zoom: 6, // Zoom initial idéal pour la France
-      minZoom: 6, // Empêche de dézoomer pour voir le monde entier
-      maxZoom: 18, // Limite de zoom maximal pour voir les rues
-      maxBounds: france, // Bloque le déplacement hors de cette zone
-      maxBoundsViscosity: 1.0, // Effet "mur de briques" : rebondit immédiatement si on glisse hors de la zone
-    });
-
-    // 3. Charger le fond de carte OpenStreetMap (avec option pour éviter les duplications)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-      noWrap: true, // Empêche la carte de se répéter indéfiniment à l'horizontale
-      bounds: france, // Optimise le chargement en ne demandant que les tuiles de cette zone
-    }).addTo(this.carte);
-
-    this.groupeMarqueurs.addTo(this.carte);
+    this.carte = initialiserCarte(this.groupeMarqueurs, this.conteneurCarte);
   }
 
   public positionner(commune: Commune, rayon: number): void {
-    this.carte.setZoom(rayon < 11 ? 12 : rayon < 26 ? 11 : 10);
-    this.carte.setView([commune.latitude, commune.longitude]);
-
-    const deltaLatitude = this.calculerDeltaLatitude(rayon);
-    const deltaLongitude = this.calculerDeltaLongitude(rayon, commune);
-
-    this.limitesGPS = {
-      latitudeMinimum: commune.latitude - deltaLatitude,
-      longitudeMinimum: commune.longitude - deltaLongitude,
-      latitudeMaximum: commune.latitude + deltaLatitude,
-      longitudeMaximum: commune.longitude + deltaLongitude,
-    };
-
-    const deltaLatitudeCarte = this.calculerDeltaLatitude(rayon * 1.1);
-    const deltaLongitudeCarte = this.calculerDeltaLongitude(rayon * 1.1, commune);
-
-    this.carte.setMaxBounds([
-      [commune.latitude - deltaLatitudeCarte, commune.longitude - deltaLongitudeCarte],
-      [commune.latitude + deltaLatitudeCarte, commune.longitude + deltaLongitudeCarte],
-    ]);
-  }
-
-  private calculerDeltaLongitude(rayon: number, commune: Commune) {
-    const latitudeRadians = commune.latitude * (Math.PI / 180);
-    return rayon / (111.32 * Math.cos(latitudeRadians));
-  }
-
-  private calculerDeltaLatitude(rayon: number) {
-    return (180 / Math.PI) * (rayon / 6371);
+    this.limitesGPS = positionnerCarte(this.carte, commune, rayon);
   }
 
   public placerMarqueursEntreprises(division: Division, procedure: string, periode: Periode): void {
@@ -156,7 +102,7 @@ export class CarteCommandesPubliques implements AfterViewInit {
     return [...cpParCoordonnees.values()];
   }
 
-  private limiterNbResultats(commandesPubliques: Array<CommandePublique>) {
+  private limiterNbResultats(commandesPubliques: Array<CommandePublique>): Array<CommandePublique> {
     if (commandesPubliques.length > 1000) {
       this.message.afficher(
         this.translateService.instant(

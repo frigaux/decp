@@ -5,9 +5,10 @@ import { environment } from '../../environments/environment';
 import { Commune } from './commune.interface';
 import { Division } from './division.interface';
 import { LimitesGPS } from './limites-gps.interface';
-import { Periode } from '../components/commandes-publiques/selecteur-mois/periode.class';
+import { Periode } from '../components/communs/selecteur-mois/periode.class';
 import { CommandePublique } from './commande-publique.interface';
-import { SelecteurDivision } from '../components/commandes-publiques/selecteur-division/selecteur-division';
+import { SelecteurDivision } from '../components/communs/selecteur-division/selecteur-division';
+import { Titulaire } from './titulaire.interface';
 
 @Service()
 export class Referentiel {
@@ -87,25 +88,12 @@ export class Referentiel {
         .get<Array<CommandePublique>>(`${environment.urlReferentiel}/${division.code}.json`)
         .subscribe({
           next: (commandesPubliques) => {
-            commandesPubliques = commandesPubliques.filter(
-              (commandePublique) =>
-                (procedure === SelecteurDivision.PROCEDURES[0] ||
-                  commandePublique.procedure === procedure) &&
-                commandePublique.dateNotification >= periode.debut &&
-                commandePublique.dateNotification <= periode.fin &&
-                limitesGPS.latitudeMinimum < commandePublique.lieuExecution.latitude &&
-                limitesGPS.longitudeMinimum < commandePublique.lieuExecution.longitude &&
-                limitesGPS.latitudeMaximum > commandePublique.lieuExecution.latitude &&
-                limitesGPS.longitudeMaximum > commandePublique.lieuExecution.longitude,
+            commandesPubliques = this.filtrerCommandesPubliques(
+              commandesPubliques,
+              procedure,
+              periode,
+              limitesGPS,
             );
-            commandesPubliques.forEach((commandePublique) => {
-              commandePublique.titulaires.forEach((titulaire) => {
-                const etablissement = titulaire.titulaire.etablissement;
-                if (etablissement) {
-                  etablissement.effectif = Referentiel.effectifParCode[etablissement.codeEffectif];
-                }
-              });
-            });
             observer.next(commandesPubliques);
           },
           error: (erreur: HttpErrorResponse) => {
@@ -113,5 +101,112 @@ export class Referentiel {
           },
         });
     });
+  }
+
+  private filtrerCommandesPubliques(
+    commandesPubliques: Array<CommandePublique>,
+    procedure: string,
+    periode: Periode,
+    limitesGPS: LimitesGPS,
+  ) {
+    commandesPubliques = commandesPubliques.filter(
+      (commandePublique) =>
+        (procedure === SelecteurDivision.PROCEDURES[0] ||
+          commandePublique.procedure === procedure) &&
+        commandePublique.dateNotification >= periode.debut &&
+        commandePublique.dateNotification <= periode.fin &&
+        limitesGPS.latitudeMinimum < commandePublique.lieuExecution.latitude &&
+        limitesGPS.longitudeMinimum < commandePublique.lieuExecution.longitude &&
+        limitesGPS.latitudeMaximum > commandePublique.lieuExecution.latitude &&
+        limitesGPS.longitudeMaximum > commandePublique.lieuExecution.longitude,
+    );
+    commandesPubliques.forEach((commandePublique) => {
+      commandePublique.titulaires.forEach((titulaire) => {
+        const etablissement = titulaire.titulaire.etablissement;
+        if (etablissement) {
+          etablissement.effectif = Referentiel.effectifParCode[etablissement.codeEffectif];
+        }
+      });
+    });
+    return commandesPubliques;
+  }
+
+  public titulaires(
+    limitesGPS: LimitesGPS,
+    division: Division,
+    procedure: string,
+    periode: Periode,
+  ): Observable<Array<Titulaire>> {
+    return new Observable((observer: Observer<Array<Titulaire>>) => {
+      this.http
+        .get<Array<CommandePublique>>(`${environment.urlReferentiel}/${division.code}.json`)
+        .subscribe({
+          next: (commandesPubliques) => {
+            commandesPubliques = this.filtrerTitulaires(
+              commandesPubliques,
+              procedure,
+              periode,
+              limitesGPS,
+            );
+            observer.next(this.transformerEnTitulaires(commandesPubliques));
+          },
+          error: (erreur: HttpErrorResponse) => {
+            observer.error(erreur);
+          },
+        });
+    });
+  }
+
+  private filtrerTitulaires(
+    commandesPubliques: Array<CommandePublique>,
+    procedure: string,
+    periode: Periode,
+    limitesGPS: LimitesGPS,
+  ) {
+    commandesPubliques = commandesPubliques.filter((commandePublique) => {
+      commandePublique.titulaires = commandePublique.titulaires.filter((titulaire) => {
+        const latitude = titulaire.titulaire.etablissement?.latitude;
+        const longitude = titulaire.titulaire.etablissement?.longitude;
+        if (latitude && longitude) {
+          return (
+            limitesGPS.latitudeMinimum < latitude &&
+            limitesGPS.longitudeMinimum < longitude &&
+            limitesGPS.latitudeMaximum > latitude &&
+            limitesGPS.longitudeMaximum > longitude
+          );
+        }
+        return false;
+      });
+      return (
+        commandePublique.titulaires.length > 0 &&
+        (procedure === SelecteurDivision.PROCEDURES[0] ||
+          commandePublique.procedure === procedure) &&
+        commandePublique.dateNotification >= periode.debut &&
+        commandePublique.dateNotification <= periode.fin
+      );
+    });
+    commandesPubliques.forEach((commandePublique) => {
+      commandePublique.titulaires.forEach((titulaire) => {
+        const etablissement = titulaire.titulaire.etablissement;
+        if (etablissement) {
+          etablissement.effectif = Referentiel.effectifParCode[etablissement.codeEffectif];
+        }
+      });
+    });
+    return commandesPubliques;
+  }
+
+  private transformerEnTitulaires(commandesPubliques: Array<CommandePublique>): Array<Titulaire> {
+    const titulaireParSiret = new Map<number, Titulaire>();
+    commandesPubliques.forEach((commandePublique) => {
+      commandePublique.titulaires.forEach((titulaire) => {
+        if (!titulaireParSiret.has(titulaire.titulaire.id)) {
+          titulaire.titulaire.commandesPubliques = [];
+          titulaireParSiret.set(titulaire.titulaire.id, titulaire.titulaire);
+        }
+        titulaireParSiret.get(titulaire.titulaire.id)!.commandesPubliques?.push(commandePublique);
+      });
+    });
+    return [...titulaireParSiret.values()];
   }
 }

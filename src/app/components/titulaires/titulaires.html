@@ -1,0 +1,34 @@
+<mat-accordion>
+  <mat-expansion-panel #panneauSelecteurs>
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ 'components.titulaires.selecteurs' | translate }}</mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="colonne">
+      <app-selecteur-commune (communeSelectionnee)="definirCommune($event)"
+                             (rayonSelectionne)="definirRayon($event)"></app-selecteur-commune>
+      <app-selecteur-mois [bornes]="{minimum: '2025-10-01', maximum: '2026-09-01'}"
+                          (periodeSelectionnee)="definirPeriode($event)"></app-selecteur-mois>
+      <app-selecteur-division (divisionSelectionnee)="definirDivision($event)"
+                              (procedureSelectionnee)="definirProcedure($event)"></app-selecteur-division>
+    </div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel #panneauCarte (opened)="chargerCarte()">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ 'components.titulaires.resultat' | translate }}</mat-panel-title>
+      <mat-panel-description>
+        @if (divisionSelectionnee()) {
+          <span
+            [innerHTML]="`${divisionSelectionnee()?.code} - ${divisionSelectionnee()?.libelle} (${periodeSelectionnee()?.debut | date:'MMMM y'} - ${periodeSelectionnee()?.fin | date:'MMMM y'})`"></span>
+        }
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="conteneur">
+      <div class="ligne">
+        <app-carte-titulaires #carteTitulaires
+                              (titulaireSelectionne)="afficherTitulaire($event)"></app-carte-titulaires>
+        <app-fiche-titulaire #ficheTitulaire></app-fiche-titulaire>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

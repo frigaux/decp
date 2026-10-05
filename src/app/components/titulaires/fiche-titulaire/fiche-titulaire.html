@@ -1,0 +1,95 @@
+@if (titulaire(); as titulaire) {
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>{{ titulaire.etablissement!.etablissement }}</mat-card-title>
+      <mat-card-subtitle>
+        {{ titulaire.etablissement!.codePostal }} {{ titulaire.etablissement!.commune }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="ligne">
+        <label>{{ 'components.titulaires.fiche_titulaire.titulaire' | translate }}</label>
+        <span>{{ titulaire.etablissement!.etablissement }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.titulaires.fiche_titulaire.code_postal' | translate }}</label>
+        <span>{{ titulaire.etablissement!.codePostal }} {{ titulaire.etablissement!.commune }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.titulaires.fiche_titulaire.siret' | translate }}</label>
+        <span>{{ titulaire.etablissement!.siret }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.titulaires.fiche_titulaire.code_naf' | translate }}</label>
+        <span>{{ titulaire.etablissement!.naf }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.titulaires.fiche_titulaire.date_creation' | translate }}</label>
+        <span>{{ titulaire.etablissement!.dateCreation | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.titulaires.fiche_titulaire.etablissement_siege' | translate }}</label>
+        <span>{{ titulaire.etablissement!.etablissementSiege === 'true' ? ('commun.oui' | translate) : ('commun.non' | translate) }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.titulaires.fiche_titulaire.effectif' | translate }}</label>
+        <span>{{ titulaire.etablissement!.effectif }}</span>
+      </div>
+      <div class="ligne">
+        <label>{{ 'components.titulaires.fiche_titulaire.liens' | translate }}</label>
+        <span>
+       <a href="{{ `https://www.pagesjaunes.fr/siret/${titulaire.etablissement!.siret}` }}"
+          target="_blank">
+                  {{ 'components.titulaires.fiche_titulaire.pages_jaunes' | translate }}
+       </a>
+       <a
+         href="{{ `https://annuaire-entreprises.data.gouv.fr/etablissement/${titulaire.etablissement!.siret}` }}"
+         target="_blank">
+                  {{ 'components.titulaires.fiche_titulaire.annuaire' | translate }}
+       </a>
+       <a
+         href="{{ `https://www.societe.com/societe/${titulaire.etablissement!.etablissement.replaceAll(' ','').toLowerCase()}-${titulaire.etablissement!.siret.substring(0, 9)}` }}.html"
+         target="_blank">
+                  {{ 'components.titulaires.fiche_titulaire.société' | translate }}
+       </a>
+    </span>
+      </div>
+      @for (commandePublique of titulaire.commandesPubliques; track commandePublique.id) {
+        <div class="commandes">
+          <div class="ligne">
+            <label>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.commande_publique' | translate }}</label>
+            <span>{{ commandePublique.objet }}</span>
+          </div>
+          <div class="ligne">
+            <label>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.code_cpv' | translate }}</label>
+            <span>{{ commandePublique.codeCPV }}</span>
+          </div>
+          <div class="ligne">
+            <label>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.code_postal' | translate }}</label>
+            <span>{{ commandePublique.lieuExecution.code }} {{ commandePublique.lieuExecution.commune }}</span>
+          </div>
+          <div class="ligne">
+            <label>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.procedure' | translate }}</label>
+            <span>{{ commandePublique.procedure }}</span>
+          </div>
+          <div class="ligne">
+            <label>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.duree_mois' | translate }}</label>
+            <span>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.mois' | translate : { nbMois: commandePublique.dureeMois } }}</span>
+          </div>
+          <div class="ligne">
+            <label>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.date_notification' | translate }}</label>
+            <span>{{ commandePublique.dateNotification | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="ligne">
+            <label>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.montant' | translate }}</label>
+            <span>{{ commandePublique.montant | currency:'EUR' }}</span>
+          </div>
+          <div class="ligne">
+            <label>{{ 'components.titulaires.fiche_titulaire.commandes_publiques.offres_recues' | translate }}</label>
+            <span>{{ commandePublique.offresRecues }}</span>
+          </div>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+}

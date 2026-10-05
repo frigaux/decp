@@ -1,8 +1,17 @@
+mat-panel-title
+  span
+    width: 5rem
+    cursor: pointer
+
 div.colonne
   display: flex
   flex-direction: column
 
-  app-selecteur-commune, app-selecteur-mois, app-selecteur-division
+  span:nth-child(1)
+    width: 100%
+    height: 1rem
+
+  app-selecteur-mois, app-selecteur-division
     margin-top: 1rem
 
 div.conteneur

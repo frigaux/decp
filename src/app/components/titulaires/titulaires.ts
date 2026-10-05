@@ -88,7 +88,7 @@ export class Titulaires implements OnInit {
         this.procedureSelectionnee()!,
         this.periodeSelectionnee()!,
       );
-      // this.ficheCommandePublique().reinitialiser();
+      this.ficheTitulaire().reinitialiser();
     } else {
       this.message.afficher(
         this.translateService.instant('components.commandes_publiques.formulaire_invalide'),

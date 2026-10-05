@@ -18,6 +18,7 @@ import { CommandePublique } from '../../services/commande-publique.interface';
 import { FicheCommandesPubliques } from './fiche-commandes-publiques/fiche-commandes-publiques';
 import { DatePipe } from '@angular/common';
 import { Message } from '../../services/message';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [
@@ -41,6 +42,7 @@ import { Message } from '../../services/message';
 export class CommandesPubliques implements OnInit {
   private translateService = inject(TranslateService);
   private message = inject(Message);
+  private router = inject(Router);
 
   private panneauSelecteurs = viewChild.required<MatExpansionPanel>('panneauSelecteurs');
   private panneauCarte = viewChild.required<MatExpansionPanel>('panneauCarte');
@@ -123,5 +125,9 @@ export class CommandesPubliques implements OnInit {
 
   protected afficherCommandesPubliques(commandesPubliques: Array<CommandePublique>) {
     this.ficheCommandePublique().afficher(commandesPubliques);
+  }
+
+  protected vueTitulaire() {
+    this.router.navigateByUrl('/titulaires');
   }
 }

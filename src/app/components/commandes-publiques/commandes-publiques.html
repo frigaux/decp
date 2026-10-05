@@ -4,6 +4,7 @@
       <mat-panel-title>{{ 'components.commandes_publiques.selecteurs' | translate }}</mat-panel-title>
     </mat-expansion-panel-header>
     <div class="colonne">
+      <span (click)="vueTitulaire()"></span>
       <app-selecteur-commune (communeSelectionnee)="definirCommune($event)"
                              (rayonSelectionne)="definirRayon($event)"></app-selecteur-commune>
       <app-selecteur-mois [bornes]="{minimum: '2025-10-01', maximum: '2026-09-01'}"
